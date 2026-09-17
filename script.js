@@ -215,16 +215,16 @@
 
             switch (actualOp) {
                 case 'add':
-                    num1 = this.getRandomInt(1, 9);
-                    num2 = this.getRandomInt(1, 9);
+                    num1 = this.getRandomInt(0, 9);
+                    num2 = this.getRandomInt(0, 9);
                     answer = num1 + num2;
                     symbol = '+';
                     name = 'Phép Cộng (1 Chữ Số)';
                     break;
                 case 'sub':
                 default:
-                    num1 = this.getRandomInt(1, 9);
-                    num2 = this.getRandomInt(1, num1);
+                    num1 = this.getRandomInt(0, 9);
+                    num2 = this.getRandomInt(0, num1);
                     answer = num1 - num2;
                     symbol = '-';
                     name = 'Phép Trừ (1 Chữ Số)';
