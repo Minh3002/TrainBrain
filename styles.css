@@ -526,10 +526,22 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.home-actions {
+.btn-hero {
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: var(--radius-lg);
+    min-height: 56px;
+    width: 100%;
+}
+
+.home-actions,
+.action-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    width: 100%;
+    margin-top: 8px;
 }
 
 /* Quick Stats Banner */
