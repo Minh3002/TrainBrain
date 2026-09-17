@@ -206,42 +206,28 @@
 
         static generate(opType) {
             let actualOp = opType;
-            if (opType === 'mix') {
-                const ops = ['add', 'sub', 'mul', 'div'];
+            if (opType === 'mix' || opType === 'mul' || opType === 'div') {
+                const ops = ['add', 'sub'];
                 actualOp = ops[this.getRandomInt(0, ops.length - 1)];
             }
 
-            let num1 = 0, num2 = 0, answer = 0, symbol = '+', name = 'Phép Cộng';
+            let num1 = 0, num2 = 0, answer = 0, symbol = '+', name = 'Phép Cộng (1 Chữ Số)';
 
             switch (actualOp) {
                 case 'add':
-                    num1 = this.getRandomInt(0, 99);
-                    num2 = this.getRandomInt(0, 99 - num1);
+                    num1 = this.getRandomInt(1, 9);
+                    num2 = this.getRandomInt(1, 9);
                     answer = num1 + num2;
                     symbol = '+';
-                    name = 'Phép Cộng';
+                    name = 'Phép Cộng (1 Chữ Số)';
                     break;
                 case 'sub':
-                    num1 = this.getRandomInt(0, 99);
-                    num2 = this.getRandomInt(0, num1);
+                default:
+                    num1 = this.getRandomInt(1, 9);
+                    num2 = this.getRandomInt(1, num1);
                     answer = num1 - num2;
                     symbol = '-';
-                    name = 'Phép Trừ';
-                    break;
-                case 'mul':
-                    num1 = this.getRandomInt(0, 9);
-                    num2 = this.getRandomInt(0, 9);
-                    answer = num1 * num2;
-                    symbol = '×';
-                    name = 'Phép Nhân';
-                    break;
-                case 'div':
-                    num2 = this.getRandomInt(1, 9);
-                    const quotient = this.getRandomInt(0, 9);
-                    num1 = num2 * quotient;
-                    answer = quotient;
-                    symbol = '÷';
-                    name = 'Phép Chia';
+                    name = 'Phép Trừ (1 Chữ Số)';
                     break;
             }
 
@@ -255,15 +241,15 @@
 
         static generateChoices(correctAnswer) {
             const set = new Set([correctAnswer]);
-            const offsets = [-1, 1, -2, 2, -10, 10, -5, 5];
+            const offsets = [-1, 1, -2, 2, -3, 3];
             
             while (set.size < 4) {
                 const randOffset = offsets[this.getRandomInt(0, offsets.length - 1)];
                 const candidate = correctAnswer + randOffset;
-                if (candidate >= 0 && candidate <= 100 && candidate !== correctAnswer) {
+                if (candidate >= 0 && candidate <= 18 && candidate !== correctAnswer) {
                     set.add(candidate);
                 } else {
-                    set.add(this.getRandomInt(0, 99));
+                    set.add(this.getRandomInt(0, 18));
                 }
             }
 
@@ -1169,6 +1155,43 @@
             }
         }
 
+        setUserAnswer(val) {
+            this.quizState.userAnswerInput = val;
+            const preview = document.getElementById('user-answer-preview');
+            if (preview) {
+                if (val !== '') {
+                    preview.innerHTML = `<span class="entered-val" style="font-size:2rem; font-weight:800; color:#06b6d4;">${val}</span>`;
+                } else {
+                    preview.innerHTML = `<span class="placeholder">Nhập hoặc vẽ câu trả lời...</span>`;
+                }
+            }
+
+            // Tự động kiểm tra câu trả lời khi dùng Bàn phím số (Tab 1 Numpad)
+            if (val !== '' && this.quizState.active && this.quizState.questions[this.quizState.currentQIndex]) {
+                const currentQ = this.quizState.questions[this.quizState.currentQIndex];
+                const userNum = parseInt(val, 10);
+                const targetNum = currentQ.answer;
+
+                // 1. Nhập đúng -> Tự động chuyển câu tiếp theo!
+                if (userNum === targetNum) {
+                    this.submitCurrentAnswer();
+                } else {
+                    // 2. Nhập sai và số chữ số nhập vào đã đạt hoặc vượt quá độ dài đáp án
+                    const targetLen = targetNum.toString().length;
+                    if (val.length >= targetLen) {
+                        soundEngine.playWrong();
+                        const card = document.getElementById('question-card');
+                        if (card) {
+                            card.classList.remove('wrong-flash');
+                            void card.offsetWidth; // trigger reflow
+                            card.classList.add('wrong-flash');
+                        }
+                        // Giữ nguyên giá trị và không chuyển câu để người dùng gõ sửa lại!
+                    }
+                }
+            }
+        }
+
         // ==========================================================================
         // 8. MATH QUIZ LIFECYCLE
         // ==========================================================================
@@ -1181,13 +1204,26 @@
             this.quizState = {
                 active: true, currentQIndex: 0, questions, userAnswers: [],
                 correctCount: 0, wrongCount: 0, currentStreak: 0, maxStreak: 0,
-                userAnswerInput: '', timerInterval: null,
-                timeRemaining: this.config.timeLimitPerQuestion,
+                userAnswerInput: '', sessionTimerInterval: null,
                 questionStartTime: Date.now(), sessionStartTime: Date.now()
             };
 
             this.switchScreen('quiz');
+            this.startSessionTimer();
             this.loadQuestion(0);
+        }
+
+        startSessionTimer() {
+            clearInterval(this.quizState.sessionTimerInterval);
+            const timeEl = document.getElementById('quiz-total-time-text');
+            const updateUI = () => {
+                const elapsedSec = Math.floor((Date.now() - this.quizState.sessionStartTime) / 1000);
+                const m = Math.floor(elapsedSec / 60);
+                const s = elapsedSec % 60;
+                if (timeEl) timeEl.textContent = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+            };
+            updateUI();
+            this.quizState.sessionTimerInterval = setInterval(updateUI, 1000);
         }
 
         loadQuestion(index) {
@@ -1234,50 +1270,9 @@
             });
 
             this.quizState.questionStartTime = Date.now();
-            this.startTimer();
-        }
-
-        startTimer() {
-            clearInterval(this.quizState.timerInterval);
-            const timeLimit = this.config.timeLimitPerQuestion;
-            const timerContainer = document.getElementById('timer-container');
-            const timerRingFill = document.getElementById('timer-ring-fill');
-            const timerText = document.getElementById('timer-text');
-
-            if (timeLimit <= 0) {
-                if (timerContainer) timerContainer.style.display = 'none';
-                return;
-            }
-
-            if (timerContainer) timerContainer.style.display = 'flex';
-            this.quizState.timeRemaining = timeLimit;
-
-            const updateTimerUI = () => {
-                const rem = this.quizState.timeRemaining;
-                if (timerText) timerText.textContent = `${rem}s`;
-                const pct = (rem / timeLimit) * 100;
-                if (timerRingFill) {
-                    timerRingFill.setAttribute('stroke-dasharray', `${pct}, 100`);
-                    if (rem <= 3) timerRingFill.classList.add('warning');
-                    else timerRingFill.classList.remove('warning');
-                }
-            };
-
-            updateTimerUI();
-
-            this.quizState.timerInterval = setInterval(() => {
-                this.quizState.timeRemaining--;
-                updateTimerUI();
-                if (this.quizState.timeRemaining <= 0) {
-                    clearInterval(this.quizState.timerInterval);
-                    soundEngine.playWrong();
-                    this.recordQuestionResult(false, 'Hết giờ', true);
-                }
-            }, 1000);
         }
 
         skipCurrentQuestion() {
-            clearInterval(this.quizState.timerInterval);
             this.recordQuestionResult(false, 'Bỏ qua', false);
         }
 
@@ -1291,7 +1286,6 @@
             }
 
             if (this.quizState.userAnswerInput === '') return;
-            clearInterval(this.quizState.timerInterval);
             const userNum = parseInt(this.quizState.userAnswerInput, 10);
             const q = this.quizState.questions[this.quizState.currentQIndex];
             this.recordQuestionResult(userNum === q.answer, userNum.toString(), false);
@@ -1317,19 +1311,19 @@
                     this.quizState.maxStreak = this.quizState.currentStreak;
                 }
                 if (card) card.classList.add('correct-flash');
-                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 400);
+                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 350);
             } else {
                 if (!isTimeout) soundEngine.playWrong();
                 this.quizState.wrongCount++;
                 this.quizState.currentStreak = 0;
                 if (card) card.classList.add('wrong-flash');
-                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 600);
+                // Giữ nguyên câu hỏi cho đến khi làm đúng!
             }
         }
 
         finishQuiz() {
             this.quizState.active = false;
-            clearInterval(this.quizState.timerInterval);
+            clearInterval(this.quizState.sessionTimerInterval);
 
             const sessionDurationSec = Math.round((Date.now() - this.quizState.sessionStartTime) / 1000);
             const totalQ = this.config.questionCount;

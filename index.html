@@ -109,24 +109,17 @@
                 <div class="config-card glass-panel" id="math-config-panel">
                     <h2 class="config-heading">Tùy Chọn Luyện Tập Toán</h2>
                     
-                    <!-- Operation Selector -->
                     <div class="form-group">
                         <label class="form-label">Phép toán:</label>
                         <div class="op-grid">
                             <button type="button" class="op-chip active" data-op="mix">
-                                <span class="op-symbol">🎲</span> Hỗn hợp
+                                <span class="op-symbol">🎲</span> Hỗn hợp 1 Chữ Số
                             </button>
                             <button type="button" class="op-chip" data-op="add">
-                                <span class="op-symbol">+</span> Phép Cộng
+                                <span class="op-symbol">+</span> Phép Cộng (1 Chữ Số)
                             </button>
                             <button type="button" class="op-chip" data-op="sub">
-                                <span class="op-symbol">-</span> Phép Trừ
-                            </button>
-                            <button type="button" class="op-chip" data-op="mul">
-                                <span class="op-symbol">×</span> Phép Nhân
-                            </button>
-                            <button type="button" class="op-chip" data-op="div">
-                                <span class="op-symbol">÷</span> Phép Chia
+                                <span class="op-symbol">-</span> Phép Trừ (1 Chữ Số)
                             </button>
                         </div>
                     </div>
@@ -140,17 +133,6 @@
                             <button type="button" class="segment-btn" data-count="40">40 câu</button>
                         </div>
                     </div>
-
-                    <!-- Time per Question Selector -->
-                    <div class="form-group">
-                        <label class="form-label">Thời gian mỗi câu:</label>
-                        <div class="segment-control" id="time-limit-segment">
-                            <button type="button" class="segment-btn active" data-time="10">10 giây</button>
-                            <button type="button" class="segment-btn" data-time="15">15 giây</button>
-                            <button type="button" class="segment-btn" data-time="30">30 giây</button>
-                            <button type="button" class="segment-btn" data-time="0">Không giới hạn</button>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Memory Test Info Card (For Memory Mode) -->
@@ -158,28 +140,29 @@
                     <h2 class="config-heading">Kiểm Tra Trí Nhớ Cuối Tuần</h2>
                     <div class="memory-info-box">
                         <div class="mib-item">
-                            <span class="mib-icon">📝</span>
-                            <span>Danh sách <strong>20 từ (mỗi từ đúng 2 tiếng)</strong> ngẫu nhiên.</span>
+                            <span class="mib-icon">📚</span>
+                            <div>
+                                <strong>20 Từ vựng</strong>
+                                <p>Hệ thống tự động chọn 20 từ ngẫu nhiên trong bộ nhớ.</p>
+                            </div>
                         </div>
                         <div class="mib-item">
                             <span class="mib-icon">⏱️</span>
-                            <span>Thời gian đếm ngược <strong>2 phút (120 giây)</strong> để ghi nhớ.</span>
-                        </div>
-                        <div class="mib-item">
-                            <span class="mib-icon">✏️</span>
-                            <span>Màn hình ẩn từ hoàn toàn -> Điền lại các từ bạn đã nhớ được.</span>
+                            <div>
+                                <strong>2 phút ghi nhớ</strong>
+                                <p>Đọc kỹ danh sách 20 từ trước khi chuyển sang phần tự ghi lại.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="home-actions">
-                    <button id="start-quiz-btn" class="btn btn-primary btn-lg pulse-glow">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <!-- Big Start Button -->
+                <div class="action-section">
+                    <button id="start-btn" class="btn btn-primary btn-hero">
+                        <span class="btn-text" id="start-btn-text">Bắt Đầu Luyện Toán</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
                         </svg>
-                        <span id="start-btn-text">Bắt Đầu Luyện Toán</span>
-                    </button>
                     
                     <button id="view-stats-btn" class="btn btn-secondary btn-lg">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
@@ -220,12 +203,8 @@
                             🔥 <span id="streak-count">0</span>
                         </div>
                     </div>
-                    <div class="timer-container" id="timer-container">
-                        <svg class="timer-ring-svg" viewBox="0 0 36 36">
-                            <path class="timer-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="timer-ring-fill" id="timer-ring-fill" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <span id="timer-text">15s</span>
+                    <div class="total-session-timer" id="timer-container" style="display:flex; align-items:center; gap:6px; font-weight:700; font-size:1rem; color:#06b6d4; background:rgba(6,182,212,0.1); padding:6px 14px; border-radius:20px; border:1px solid rgba(6,182,212,0.2);">
+                        ⏱️ <span id="quiz-total-time-text">00:00</span>
                     </div>
                 </div>
 
