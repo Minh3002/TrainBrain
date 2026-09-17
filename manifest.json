@@ -1,0 +1,18 @@
+{
+  "name": "Rèn Luyện Trí Nhớ & Tính Toán Nhẩm",
+  "short_name": "Tính Nhẩm AI",
+  "description": "Ứng dụng rèn luyện tính nhẩm nhanh và kiểm tra trí nhớ cuối tuần với AI nhận diện chữ viết tay.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230a0e1a' stroke='%2306b6d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='24' height='24' fill='%230a0e1a'/><path d='M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.1L14 21H10l-1.8-1.9C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9z'/><path d='M12 6v6l4 2'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

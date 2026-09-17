@@ -1,0 +1,9 @@
+{
+  "appId": "com.mathmemory.brainapp",
+  "appName": "Trí Nhớ & Tính Nhẩm",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
