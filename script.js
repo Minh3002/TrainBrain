@@ -659,10 +659,7 @@
                 else b.classList.remove('active');
             });
 
-            document.querySelectorAll('#settings-time-segment .segment-btn').forEach(b => {
-                if (parseInt(b.dataset.setTime, 10) === settings.defaultTimeLimit) b.classList.add('active');
-                else b.classList.remove('active');
-            });
+
 
             const soundToggle = document.getElementById('setting-sound-toggle');
             if (soundToggle) soundToggle.checked = settings.soundEnabled;
@@ -949,13 +946,11 @@
         saveSettingsFromUI() {
             const activeOpBtn = document.querySelector('[data-set-op].active');
             const activeCountBtn = document.querySelector('#settings-qcount-segment .segment-btn.active');
-            const activeTimeBtn = document.querySelector('#settings-time-segment .segment-btn.active');
             const soundToggle = document.getElementById('setting-sound-toggle');
 
             const newSettings = {
                 defaultOp: activeOpBtn ? activeOpBtn.dataset.setOp : 'mix',
                 defaultQCount: activeCountBtn ? parseInt(activeCountBtn.dataset.setCount, 10) : 40,
-                defaultTimeLimit: activeTimeBtn ? parseInt(activeTimeBtn.dataset.setTime, 10) : 15,
                 soundEnabled: soundToggle ? soundToggle.checked : true
             };
 
