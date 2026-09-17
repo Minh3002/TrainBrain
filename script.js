@@ -760,14 +760,16 @@
             });
 
             // Start Quiz / Start Memory Test
-            document.getElementById('start-quiz-btn')?.addEventListener('click', () => {
+            const startHandler = () => {
                 soundEngine.playClick();
                 if (this.config.activeMainMode === 'word-memory') {
                     this.startWordMemoryTest();
                 } else {
                     this.startQuiz();
                 }
-            });
+            };
+            document.getElementById('start-btn')?.addEventListener('click', startHandler);
+            document.getElementById('start-quiz-btn')?.addEventListener('click', startHandler);
 
             // Stats Modal & Charting
             const openStatsHandler = () => {
