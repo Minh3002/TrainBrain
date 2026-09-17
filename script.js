@@ -1171,16 +1171,14 @@
             // Tự động kiểm tra câu trả lời khi dùng Bàn phím số (Tab 1 Numpad)
             if (val !== '' && this.quizState.active && this.quizState.questions[this.quizState.currentQIndex]) {
                 const currentQ = this.quizState.questions[this.quizState.currentQIndex];
-                const userNum = parseInt(val, 10);
-                const targetNum = currentQ.answer;
+                const targetStr = currentQ.answer.toString();
 
-                // 1. Nhập đúng -> Tự động chuyển câu tiếp theo!
-                if (userNum === targetNum) {
+                // 1. Nhập đúng khớp tuyệt đối -> Tự động chuyển câu tiếp theo sau 300ms!
+                if (val === targetStr) {
                     this.submitCurrentAnswer();
                 } else {
                     // 2. Nhập sai và số chữ số nhập vào đã đạt hoặc vượt quá độ dài đáp án
-                    const targetLen = targetNum.toString().length;
-                    if (val.length >= targetLen) {
+                    if (val.length >= targetStr.length) {
                         soundEngine.playWrong();
                         const card = document.getElementById('question-card');
                         if (card) {
@@ -1313,7 +1311,7 @@
                     this.quizState.maxStreak = this.quizState.currentStreak;
                 }
                 if (card) card.classList.add('correct-flash');
-                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 350);
+                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 300);
             } else {
                 if (!isTimeout) soundEngine.playWrong();
                 this.quizState.wrongCount++;
