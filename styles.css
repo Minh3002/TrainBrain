@@ -185,8 +185,7 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding-bottom: 95px; /* ample space for bottom nav on mobile screens */
-    -webkit-overflow-scrolling: touch;
+    padding-bottom: 70px; /* space for bottom nav */
 }
 
 .screen {
@@ -530,10 +529,7 @@ body {
 .home-actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    position: relative;
-    z-index: 10;
-    margin-top: 4px;
+    gap: 10px;
 }
 
 /* Quick Stats Banner */
