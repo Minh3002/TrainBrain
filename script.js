@@ -759,17 +759,38 @@
                 });
             });
 
-            // Start Quiz / Start Memory Test
-            const startHandler = () => {
-                soundEngine.playClick();
+            // Start Quiz / Start Memory Test (Hỗ trợ cả Click & Touch trên điện thoại)
+            let lastStartTrigger = 0;
+            const startHandler = (e) => {
+                const now = Date.now();
+                if (now - lastStartTrigger < 350) return;
+                lastStartTrigger = now;
+
+                if (e && e.cancelable) e.preventDefault();
+                try {
+                    soundEngine.playClick();
+                } catch (err) {
+                    console.warn('Audio click error:', err);
+                }
+
                 if (this.config.activeMainMode === 'word-memory') {
                     this.startWordMemoryTest();
                 } else {
                     this.startQuiz();
                 }
             };
-            document.getElementById('start-btn')?.addEventListener('click', startHandler);
-            document.getElementById('start-quiz-btn')?.addEventListener('click', startHandler);
+
+            const mainStartBtn = document.getElementById('start-btn');
+            if (mainStartBtn) {
+                mainStartBtn.addEventListener('click', startHandler);
+                mainStartBtn.addEventListener('touchend', startHandler);
+            }
+
+            const altStartBtn = document.getElementById('start-quiz-btn');
+            if (altStartBtn) {
+                altStartBtn.addEventListener('click', startHandler);
+                altStartBtn.addEventListener('touchend', startHandler);
+            }
 
             // Stats Modal & Charting
             const openStatsHandler = () => {
