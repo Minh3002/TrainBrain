@@ -759,17 +759,40 @@
                 });
             });
 
-            // Start Quiz / Start Memory Test
-            const startHandler = () => {
-                soundEngine.playClick();
+            // Start Quiz / Start Memory Test (Tối ưu phản hồi cảm ứng trên điện thoại)
+            let lastStartTouchTime = 0;
+            const startHandler = (e) => {
+                const now = Date.now();
+                if (e && e.type === 'touchstart') {
+                    lastStartTouchTime = now;
+                } else if (e && e.type === 'click' && now - lastStartTouchTime < 400) {
+                    return; // Tránh nổ 2 lần click trên thiết bị cảm ứng
+                }
+                
+                try {
+                    soundEngine.initContext();
+                    soundEngine.playClick();
+                } catch (err) {
+                    console.warn('Audio context init warning:', err);
+                }
+
                 if (this.config.activeMainMode === 'word-memory') {
                     this.startWordMemoryTest();
                 } else {
                     this.startQuiz();
                 }
             };
-            document.getElementById('start-btn')?.addEventListener('click', startHandler);
-            document.getElementById('start-quiz-btn')?.addEventListener('click', startHandler);
+
+            const startBtn = document.getElementById('start-btn');
+            if (startBtn) {
+                startBtn.addEventListener('click', startHandler);
+                startBtn.addEventListener('touchstart', startHandler, { passive: true });
+            }
+            const startQuizBtn = document.getElementById('start-quiz-btn');
+            if (startQuizBtn) {
+                startQuizBtn.addEventListener('click', startHandler);
+                startQuizBtn.addEventListener('touchstart', startHandler, { passive: true });
+            }
 
             // Stats Modal & Charting
             const openStatsHandler = () => {
