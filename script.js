@@ -1215,13 +1215,8 @@
                             void card.offsetWidth; // trigger reflow
                             card.classList.add('wrong-flash');
                         }
-                        // Tự động xóa sạch giá trị lưu trữ & ô xem trước về "" để người dùng nhập lại ngay lập tức
-                        this.quizState.userAnswerInput = '';
-                        setTimeout(() => {
-                            if (this.quizState.userAnswerInput === '') {
-                                this.setUserAnswer('');
-                            }
-                        }, 150);
+                        // Ngay lập tức xóa sạch số hiển thị ở ô preview và biến lưu trữ về "" để user gõ lại số khác
+                        this.setUserAnswer('');
                     }
                 }
             }
