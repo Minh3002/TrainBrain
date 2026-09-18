@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-brain-pwa-v1';
+const CACHE_NAME = 'math-brain-pwa-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -21,6 +21,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
+            console.log('Clearing old PWA cache:', cache);
             return caches.delete(cache);
           }
         })
@@ -29,28 +30,28 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Network-First strategy: Ưu tiên tải code mới nhất từ Server/Network. Chỉ dùng Cache khi Offline!
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || event.request.url.includes('googleapis.com') || event.request.url.includes('esm.run')) {
     return;
   }
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return networkResponse;
-      });
-    }).catch(() => {
-      return caches.match('./index.html');
-    })
+      })
+      .catch(() => {
+        // Trình duyệt Offline -> Lấy từ Cache cũ
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || caches.match('./index.html');
+        });
+      })
   );
 });
