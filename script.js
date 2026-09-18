@@ -759,40 +759,17 @@
                 });
             });
 
-            // Start Quiz / Start Memory Test (Tối ưu phản hồi cảm ứng trên điện thoại)
-            let lastStartTouchTime = 0;
-            const startHandler = (e) => {
-                const now = Date.now();
-                if (e && e.type === 'touchstart') {
-                    lastStartTouchTime = now;
-                } else if (e && e.type === 'click' && now - lastStartTouchTime < 400) {
-                    return; // Tránh nổ 2 lần click trên thiết bị cảm ứng
-                }
-                
-                try {
-                    soundEngine.initContext();
-                    soundEngine.playClick();
-                } catch (err) {
-                    console.warn('Audio context init warning:', err);
-                }
-
+            // Start Quiz / Start Memory Test
+            const startHandler = () => {
+                soundEngine.playClick();
                 if (this.config.activeMainMode === 'word-memory') {
                     this.startWordMemoryTest();
                 } else {
                     this.startQuiz();
                 }
             };
-
-            const startBtn = document.getElementById('start-btn');
-            if (startBtn) {
-                startBtn.addEventListener('click', startHandler);
-                startBtn.addEventListener('touchstart', startHandler, { passive: true });
-            }
-            const startQuizBtn = document.getElementById('start-quiz-btn');
-            if (startQuizBtn) {
-                startQuizBtn.addEventListener('click', startHandler);
-                startQuizBtn.addEventListener('touchstart', startHandler, { passive: true });
-            }
+            document.getElementById('start-btn')?.addEventListener('click', startHandler);
+            document.getElementById('start-quiz-btn')?.addEventListener('click', startHandler);
 
             // Stats Modal & Charting
             const openStatsHandler = () => {
@@ -1238,15 +1215,11 @@
                             void card.offsetWidth; // trigger reflow
                             card.classList.add('wrong-flash');
                         }
-                        
-                        // Tự động xóa sạch giá trị lưu trữ ngay lập tức
+                        // Tự động xóa sạch giá trị lưu trữ & ô xem trước về "" để người dùng nhập lại ngay lập tức
                         this.quizState.userAnswerInput = '';
-                        
-                        // Đưa ô xem trước (preview) về trạng thái trống sau 150ms để kịp hiển thị cảnh báo
                         setTimeout(() => {
-                            if (!this.quizState.isTransitioning && this.quizState.userAnswerInput === '') {
-                                const preview = document.getElementById('user-answer-preview');
-                                if (preview) preview.innerHTML = `<span class="placeholder">Nhập hoặc vẽ câu trả lời...</span>`;
+                            if (this.quizState.userAnswerInput === '') {
+                                this.setUserAnswer('');
                             }
                         }, 150);
                     }
