@@ -1215,7 +1215,17 @@
                             void card.offsetWidth; // trigger reflow
                             card.classList.add('wrong-flash');
                         }
-                        // Giữ nguyên giá trị và không chuyển câu để người dùng gõ sửa lại!
+                        
+                        // Tự động xóa sạch giá trị lưu trữ ngay lập tức
+                        this.quizState.userAnswerInput = '';
+                        
+                        // Đưa ô xem trước (preview) về trạng thái trống sau 150ms để kịp hiển thị cảnh báo
+                        setTimeout(() => {
+                            if (!this.quizState.isTransitioning && this.quizState.userAnswerInput === '') {
+                                const preview = document.getElementById('user-answer-preview');
+                                if (preview) preview.innerHTML = `<span class="placeholder">Nhập hoặc vẽ câu trả lời...</span>`;
+                            }
+                        }, 150);
                     }
                 }
             }
