@@ -944,6 +944,32 @@
                 soundEngine.playClick();
                 this.switchScreen('home');
             });
+
+            // Lắng nghe sự kiện bàn phím máy tính (Physical Keyboard)
+            window.addEventListener('keydown', (e) => {
+                if (!this.quizState.active || !this.screens.quiz.classList.contains('active')) return;
+                if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    soundEngine.playClick();
+                    if (this.quizState.userAnswerInput.length < 4) {
+                        this.setUserAnswer(this.quizState.userAnswerInput + e.key);
+                    }
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    soundEngine.playClick();
+                    this.setUserAnswer(this.quizState.userAnswerInput.slice(0, -1));
+                } else if (e.key === 'c' || e.key === 'C' || e.key === 'Escape') {
+                    e.preventDefault();
+                    soundEngine.playClick();
+                    this.setUserAnswer('');
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    soundEngine.playClick();
+                    this.submitCurrentAnswer();
+                }
+            });
         }
 
         saveSettingsFromUI() {
@@ -1158,6 +1184,8 @@
         }
 
         setUserAnswer(val) {
+            if (this.quizState.isTransitioning) return;
+
             this.quizState.userAnswerInput = val;
             const preview = document.getElementById('user-answer-preview');
             if (preview) {
@@ -1168,13 +1196,14 @@
                 }
             }
 
-            // Tự động kiểm tra câu trả lời khi dùng Bàn phím số (Tab 1 Numpad)
+            // Tự động kiểm tra câu trả lời khi dùng Bàn phím số / Bàn phím vật lý
             if (val !== '' && this.quizState.active && this.quizState.questions[this.quizState.currentQIndex]) {
                 const currentQ = this.quizState.questions[this.quizState.currentQIndex];
                 const targetStr = currentQ.answer.toString();
 
                 // 1. Nhập đúng khớp tuyệt đối -> Tự động chuyển câu tiếp theo sau 300ms!
                 if (val === targetStr) {
+                    this.quizState.isTransitioning = true;
                     this.submitCurrentAnswer();
                 } else {
                     // 2. Nhập sai và số chữ số nhập vào đã đạt hoặc vượt quá độ dài đáp án
@@ -1204,7 +1233,7 @@
             this.quizState = {
                 active: true, currentQIndex: 0, questions, userAnswers: [],
                 correctCount: 0, wrongCount: 0, currentStreak: 0, maxStreak: 0,
-                userAnswerInput: '', sessionTimerInterval: null,
+                userAnswerInput: '', isTransitioning: false, sessionTimerInterval: null,
                 questionStartTime: Date.now(), sessionStartTime: Date.now()
             };
 
@@ -1233,6 +1262,7 @@
             }
 
             const q = this.quizState.questions[index];
+            this.quizState.isTransitioning = false;
             this.quizState.currentQIndex = index;
             this.quizState.userAnswerInput = '';
             this.setUserAnswer('');
