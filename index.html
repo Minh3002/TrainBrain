@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tính Nhanh Luyện Não - Rèn Luyện Trí Nhớ</title>
-    <meta name="description" content="Ứng dụng Tính nhanh luyện nào và kiểm tra trí nhớ cuối tuần. Hỗ trợ bàn phím số, trắc nghiệm và biểu đồ theo dõi tiến độ.">
+    <meta name="description"
+        content="Ứng dụng Tính nhanh luyện nào và kiểm tra trí nhớ cuối tuần. Hỗ trợ bàn phím số, trắc nghiệm và biểu đồ theo dõi tiến độ.">
     <meta name="theme-color" content="#0a0e1a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,7 +14,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Chart.js for Tracking & Progress Line Charts -->
@@ -27,15 +31,18 @@
     </script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="app-container" id="app-container">
         <!-- Top Navigation Header -->
         <header class="app-header">
             <div class="brand" id="brand-home-btn">
                 <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.1L14 21H10l-1.8-1.9C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9z"/>
-                        <path d="M12 6v6l4 2"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.1L14 21H10l-1.8-1.9C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9z" />
+                        <path d="M12 6v6l4 2" />
                     </svg>
                 </div>
                 <span class="brand-title">Tính Nhanh Luyện Não</span>
@@ -46,7 +53,8 @@
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
-                    <svg id="sound-icon-off" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg id="sound-icon-off" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <line x1="23" y1="9" x2="17" y2="15"></line>
                         <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -62,7 +70,9 @@
                 <button id="settings-header-btn" class="icon-btn" title="Cài đặt" aria-label="Cài đặt">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
                     </svg>
                 </button>
             </div>
@@ -75,16 +85,22 @@
                 <div class="hero-section">
                     <div class="brain-glow-container">
                         <div class="brain-glow"></div>
-                        <svg class="hero-brain-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M50 15C32 15 20 28 20 45C20 58 27 68 37 73.5L38 85H62L63 73.5C73 68 80 58 80 45C80 28 68 15 50 15Z" fill="url(#brain-grad-1)" opacity="0.85"/>
-                            <path d="M35 38C35 32 41 27 48 27C52 27 55 29 55 32C55 36 50 38 45 40C40 42 35 45 35 52V55" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
-                            <circle cx="35" cy="65" r="3" fill="#FFFFFF"/>
-                            <circle cx="65" cy="65" r="3" fill="#FFFFFF"/>
-                            <path d="M42 68C45 71 55 71 58 68" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+                        <svg class="hero-brain-svg" viewBox="0 0 100 100" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M50 15C32 15 20 28 20 45C20 58 27 68 37 73.5L38 85H62L63 73.5C73 68 80 58 80 45C80 28 68 15 50 15Z"
+                                fill="url(#brain-grad-1)" opacity="0.85" />
+                            <path d="M35 38C35 32 41 27 48 27C52 27 55 29 55 32C55 36 50 38 45 40C40 42 35 45 35 52V55"
+                                stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
+                            <circle cx="35" cy="65" r="3" fill="#FFFFFF" />
+                            <circle cx="65" cy="65" r="3" fill="#FFFFFF" />
+                            <path d="M42 68C45 71 55 71 58 68" stroke="#FFFFFF" stroke-width="3"
+                                stroke-linecap="round" />
                             <defs>
-                                <linearGradient id="brain-grad-1" x1="20" y1="15" x2="80" y2="85" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#2563EB"/>
-                                    <stop offset="1" stop-color="#06B6D4"/>
+                                <linearGradient id="brain-grad-1" x1="20" y1="15" x2="80" y2="85"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#2563EB" />
+                                    <stop offset="1" stop-color="#06B6D4" />
                                 </linearGradient>
                             </defs>
                         </svg>
@@ -106,22 +122,22 @@
                 </div>
 
                 <!-- Setup Configuration Form (For Math Mode) -->
-                <div class="config-card glass-panel" id="math-config-panel">
+                <div class="config-card glass-panel" id="math-config-panel" style="display:none;">
                     <h2 class="config-heading">Tùy Chọn Luyện Tập Toán</h2>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Phép toán:</label>
                         <div class="op-grid">
                             <button type="button" class="op-chip active" data-op="mix">
                                 <span class="op-symbol">🎲</span> Hỗn hợp (+, -, ×)
                             </button>
-                            <button type="button" class="op-chip" data-op="add">
+                            <button type="button" class="op-chip" data-op="add" style="display:none;">
                                 <span class="op-symbol">+</span> Phép Cộng
                             </button>
-                            <button type="button" class="op-chip" data-op="sub">
+                            <button type="button" class="op-chip" data-op="sub" style="display:none;">
                                 <span class="op-symbol">-</span> Phép Trừ
                             </button>
-                            <button type="button" class="op-chip" data-op="mul">
+                            <button type="button" class="op-chip" data-op="mul" style="display:none;">
                                 <span class="op-symbol">×</span> Phép Nhân
                             </button>
                         </div>
@@ -167,9 +183,10 @@
                         </svg>
                         <span id="start-btn-text">Bắt Đầu Luyện Toán</span>
                     </button>
-                    
+
                     <button id="view-stats-btn" class="btn btn-secondary btn-lg">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                            height="20">
                             <line x1="18" y1="20" x2="18" y2="10"></line>
                             <line x1="12" y1="20" x2="12" y2="4"></line>
                             <line x1="6" y1="20" x2="6" y2="14"></line>
@@ -202,7 +219,8 @@
                 <!-- Top Progress & Timer Bar -->
                 <div class="quiz-top-bar glass-panel">
                     <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                            height="18">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
@@ -214,7 +232,8 @@
                             🔥 <span id="streak-count">0</span>
                         </div>
                     </div>
-                    <div class="total-session-timer" id="timer-container" style="display:flex; align-items:center; gap:6px; font-weight:700; font-size:1rem; color:#06b6d4; background:rgba(6,182,212,0.1); padding:6px 14px; border-radius:20px; border:1px solid rgba(6,182,212,0.2);">
+                    <div class="total-session-timer" id="timer-container"
+                        style="display:flex; align-items:center; gap:6px; font-weight:700; font-size:1rem; color:#06b6d4; background:rgba(6,182,212,0.1); padding:6px 14px; border-radius:20px; border:1px solid rgba(6,182,212,0.2);">
                         ⏱️ <span id="quiz-total-time-text">00:00</span>
                     </div>
                 </div>
@@ -239,7 +258,8 @@
                 <div class="answer-tabs-container">
                     <div class="tabs-header">
                         <button class="tab-btn active" id="tab-btn-keypad" data-target="tab-keypad">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                                height="18">
                                 <rect x="3" y="3" width="18" height="18" rx="2"></rect>
                                 <line x1="8" y1="12" x2="8" y2="12.01"></line>
                                 <line x1="12" y1="12" x2="12" y2="12.01"></line>
@@ -250,7 +270,8 @@
                             </svg>
                             Bàn phím & Trắc nghiệm
                         </button>
-                        <button class="tab-btn hidden" id="tab-btn-canvas" data-target="tab-canvas" style="display:none;">
+                        <button class="tab-btn hidden" id="tab-btn-canvas" data-target="tab-canvas"
+                            style="display:none;">
                             ✍️ Viết tay
                         </button>
                     </div>
@@ -278,7 +299,8 @@
                                 <button class="num-btn btn-action" id="btn-clear-num" title="Xóa tất cả">C</button>
                                 <button class="num-btn" data-val="0">0</button>
                                 <button class="num-btn btn-action" id="btn-backspace" title="Xóa 1 ký tự">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        width="20" height="20">
                                         <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
                                         <line x1="18" y1="9" x2="12" y2="15"></line>
                                         <line x1="12" y1="9" x2="18" y2="15"></line>
@@ -316,7 +338,8 @@
                 <!-- Memory Header -->
                 <div class="wm-header glass-panel">
                     <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                            height="18">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
@@ -334,7 +357,8 @@
                 <!-- PHASE 1: MEMORIZE PHASE (Hiển thị 20 từ) -->
                 <div id="wm-memorize-phase" class="wm-phase-container">
                     <div class="wm-instruction-card glass-panel">
-                        <p>Hãy tập trung ghi nhớ danh sách <strong>20 từ (mỗi từ đúng 2 tiếng)</strong> dưới đây trong thời gian <strong>2 phút (120 giây)</strong>:</p>
+                        <p>Hãy tập trung ghi nhớ danh sách <strong>20 từ (mỗi từ đúng 2 tiếng)</strong> dưới đây trong
+                            thời gian <strong>2 phút (120 giây)</strong>:</p>
                     </div>
 
                     <div class="words-grid" id="wm-words-grid">
@@ -351,7 +375,8 @@
                 <!-- PHASE 2: RECALL INPUT PHASE (Khung điền 20 từ) -->
                 <div id="wm-recall-phase" class="wm-phase-container hidden">
                     <div class="wm-instruction-card glass-panel">
-                        <p>Danh sách từ đã bị ẩn! Hãy gõ lại các từ bạn vừa nhớ được vào các khung bên dưới (không cần đúng thứ tự):</p>
+                        <p>Danh sách từ đã bị ẩn! Hãy gõ lại các từ bạn vừa nhớ được vào các khung bên dưới (không cần
+                            đúng thứ tự):</p>
                     </div>
 
                     <div class="recall-grid" id="wm-recall-grid">
@@ -370,7 +395,8 @@
                     <div class="result-header">
                         <div class="trophy-badge pulse-glow" id="wm-trophy-icon">🏆</div>
                         <h1 class="result-title" id="wm-result-title">Kết Quả Nhớ Từ Cuối Tuần</h1>
-                        <p class="result-subtitle" id="wm-result-subtitle">Đánh giá khả năng ghi nhớ ngắn hạn của bạn</p>
+                        <p class="result-subtitle" id="wm-result-subtitle">Đánh giá khả năng ghi nhớ ngắn hạn của bạn
+                        </p>
                     </div>
 
                     <div class="result-grid">
@@ -410,7 +436,8 @@
             <section id="result-screen" class="screen">
                 <div class="screen-top-bar">
                     <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                            height="18">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
@@ -420,7 +447,8 @@
                 <div class="result-header">
                     <div class="trophy-badge pulse-glow">🏆</div>
                     <h1 class="result-title">Hoàn Thành Bài Tập!</h1>
-                    <p class="result-subtitle" id="result-eval-text">Xuất sắc! Phản xạ tính toán của bạn rất ấn tượng.</p>
+                    <p class="result-subtitle" id="result-eval-text">Xuất sắc! Phản xạ tính toán của bạn rất ấn tượng.
+                    </p>
                 </div>
 
                 <!-- Summary Cards Grid -->
@@ -475,7 +503,8 @@
             <section id="settings-screen" class="screen">
                 <div class="settings-header">
                     <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                            height="18">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
@@ -487,7 +516,7 @@
 
                 <div class="config-card glass-panel">
                     <h2 class="config-heading">Thiết Lập Mặc Định</h2>
-                    
+
                     <!-- Default Operation -->
                     <div class="form-group">
                         <label class="form-label">Phép toán mặc định khi khởi động:</label>
@@ -552,9 +581,11 @@
             <div class="modal-content glass-panel ready-card">
                 <div class="ready-icon pulse-glow">⏱️</div>
                 <h2 class="ready-title">Bạn đã sẵn sàng chưa?</h2>
-                <p class="ready-desc">Bài tập gồm các phép tính 1 chữ số (+, -, ×). Đồng hồ tính tổng thời gian sẽ bắt đầu chạy ngay khi bạn bấm Sẵn sàng!</p>
+                <p class="ready-desc">Bài tập gồm các phép tính 1 chữ số (+, -, ×). Đồng hồ tính tổng thời gian sẽ bắt
+                    đầu chạy ngay khi bạn bấm Sẵn sàng!</p>
                 <div class="ready-actions">
-                    <button type="button" id="ready-start-btn" class="btn btn-primary btn-lg pulse-glow btn-grow">🚀 Sẵn Sàng!</button>
+                    <button type="button" id="ready-start-btn" class="btn btn-primary btn-lg pulse-glow btn-grow">🚀 Sẵn
+                        Sàng!</button>
                     <button type="button" id="ready-cancel-btn" class="btn btn-secondary">Quay lại</button>
                 </div>
             </div>
@@ -566,7 +597,8 @@
                 <div class="modal-header">
                     <div style="display:flex; align-items:center; gap:10px;">
                         <button type="button" class="back-nav-btn" id="modal-back-btn" title="Quay lại">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
+                                height="18">
                                 <line x1="19" y1="12" x2="5" y2="12"></line>
                                 <polyline points="12 19 5 12 12 5"></polyline>
                             </svg>
@@ -629,7 +661,8 @@
                     <h3 class="modal-sub-title">Lịch Sử Bài Làm Chi Tiết</h3>
                     <div class="history-list-wrapper">
                         <div class="history-list" id="history-list-container">
-                            <div class="empty-history-text">Chưa có lịch sử làm bài. Hãy hoàn thành bài luyện tập đầu tiên!</div>
+                            <div class="empty-history-text">Chưa có lịch sử làm bài. Hãy hoàn thành bài luyện tập đầu
+                                tiên!</div>
                         </div>
                     </div>
                 </div>
@@ -667,7 +700,9 @@
                 <div class="bnav-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
                     </svg>
                 </div>
                 <span class="bnav-label">Cài Đặt</span>
@@ -689,4 +724,5 @@
         }
     </script>
 </body>
+
 </html>
