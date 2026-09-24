@@ -206,8 +206,8 @@
 
         static generate(opType) {
             let actualOp = opType;
-            if (opType === 'mix' || opType === 'mul' || opType === 'div') {
-                const ops = ['add', 'sub'];
+            if (opType === 'mix' || opType === 'div') {
+                const ops = ['add', 'sub', 'mul'];
                 actualOp = ops[this.getRandomInt(0, ops.length - 1)];
             }
 
@@ -222,12 +222,19 @@
                     name = 'Phép Cộng (1 Chữ Số)';
                     break;
                 case 'sub':
-                default:
                     num1 = this.getRandomInt(0, 9);
                     num2 = this.getRandomInt(0, num1);
                     answer = num1 - num2;
                     symbol = '-';
                     name = 'Phép Trừ (1 Chữ Số)';
+                    break;
+                case 'mul':
+                default:
+                    num1 = this.getRandomInt(0, 9);
+                    num2 = this.getRandomInt(0, 9);
+                    answer = num1 * num2;
+                    symbol = '×';
+                    name = 'Phép Nhân (1 Chữ Số)';
                     break;
             }
 
@@ -241,15 +248,16 @@
 
         static generateChoices(correctAnswer) {
             const set = new Set([correctAnswer]);
-            const offsets = [-1, 1, -2, 2, -3, 3];
+            const offsets = [-1, 1, -2, 2, -3, 3, -5, 5];
+            const maxVal = Math.max(18, correctAnswer + 10);
             
             while (set.size < 4) {
                 const randOffset = offsets[this.getRandomInt(0, offsets.length - 1)];
                 const candidate = correctAnswer + randOffset;
-                if (candidate >= 0 && candidate <= 18 && candidate !== correctAnswer) {
+                if (candidate >= 0 && candidate <= maxVal && candidate !== correctAnswer) {
                     set.add(candidate);
                 } else {
-                    set.add(this.getRandomInt(0, 18));
+                    set.add(this.getRandomInt(0, maxVal));
                 }
             }
 
@@ -776,7 +784,8 @@
                 if (this.config.activeMainMode === 'word-memory') {
                     this.startWordMemoryTest();
                 } else {
-                    this.startQuiz();
+                    // Hiển thị Popup xác nhận Sẵn Sàng cho chế độ Tính nhanh
+                    document.getElementById('ready-modal')?.classList.remove('hidden');
                 }
             };
 
@@ -791,6 +800,40 @@
                 altStartBtn.addEventListener('click', startHandler);
                 altStartBtn.addEventListener('touchend', startHandler);
             }
+
+            // Ready Popup Actions
+            document.getElementById('ready-start-btn')?.addEventListener('click', () => {
+                soundEngine.playClick();
+                document.getElementById('ready-modal')?.classList.add('hidden');
+                this.startQuiz();
+            });
+
+            document.getElementById('ready-cancel-btn')?.addEventListener('click', () => {
+                soundEngine.playClick();
+                document.getElementById('ready-modal')?.classList.add('hidden');
+            });
+
+            // Universal Back Buttons Navigation
+            document.querySelectorAll('.back-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    soundEngine.playClick();
+                    if (btn.id === 'modal-back-btn') {
+                        document.getElementById('stats-modal')?.classList.add('hidden');
+                    } else {
+                        if (this.quizState.active || this.wordMemoryState.active) {
+                            if (confirm('Bạn có chắc muốn quay lại trang chủ và dừng bài tập?')) {
+                                clearInterval(this.quizState.sessionTimerInterval);
+                                clearInterval(this.wordMemoryState.memorizeTimer);
+                                this.quizState.active = false;
+                                this.wordMemoryState.active = false;
+                                this.switchScreen('home');
+                            }
+                        } else {
+                            this.switchScreen('home');
+                        }
+                    }
+                });
+            });
 
             // Stats Modal & Charting
             const openStatsHandler = () => {
@@ -1133,17 +1176,28 @@
             const normalize = (str) => str.toLowerCase().replace(/\s+/g, ' ').trim();
             const originalNormalized = this.wordMemoryState.currentWords.map(w => normalize(w));
 
-            let correctCount = 0;
+            // Track matched target indices to prevent double-matching
+            const matchedTargetIndices = new Set();
+
+            userEnteredWords.forEach(userVal => {
+                const userNorm = normalize(userVal);
+                if (userNorm !== '') {
+                    const targetIdx = originalNormalized.findIndex((origNorm, idx) => !matchedTargetIndices.has(idx) && origNorm === userNorm);
+                    if (targetIdx !== -1) {
+                        matchedTargetIndices.add(targetIdx);
+                    }
+                }
+            });
+
+            const correctCount = matchedTargetIndices.size;
             const comparisonList = [];
 
             this.wordMemoryState.currentWords.forEach((targetWord, idx) => {
-                const targetNorm = normalize(targetWord);
                 const userVal = userEnteredWords[idx] || '';
                 const userNorm = normalize(userVal);
-
-                const isMatch = userNorm !== '' && (userNorm === targetNorm || originalNormalized.includes(userNorm));
-
-                if (isMatch) correctCount++;
+                
+                // Match is true if user entered any word that belongs to original word list (order-independent)
+                const isMatch = userNorm !== '' && originalNormalized.includes(userNorm);
 
                 comparisonList.push({
                     targetWord,
@@ -1479,65 +1533,187 @@
         }
 
         renderProgressChart() {
-            const canvas = document.getElementById('progress-chart');
-            if (!canvas || typeof Chart === 'undefined') return;
+            if (typeof Chart === 'undefined') return;
 
-            const days = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
-            const accuracyData = [78, 82, 85, 89, 93, 91, 96];
-            const speedData = [3.1, 2.8, 2.6, 2.4, 2.2, 2.3, 2.0];
+            // Generate labels and keys for the last 7 days
+            const history = StatsManager.getHistory();
+            const now = new Date();
+            const last7DaysLabels = [];
+            const dayKeys = [];
 
-            if (this.chartInstance) {
-                this.chartInstance.destroy();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(now);
+                d.setDate(now.getDate() - i);
+                const dayName = d.toLocaleDateString('vi-VN', { weekday: 'short' });
+                const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+                last7DaysLabels.push(`${dayName} (${dateStr})`);
+                dayKeys.push(d.toDateString());
             }
 
-            const ctx = canvas.getContext('2d');
-            this.chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: days,
-                    datasets: [
-                        {
-                            label: 'Tỉ Lệ Chính Xác (%)',
-                            data: accuracyData,
-                            borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#2563eb'
-                        },
-                        {
-                            label: 'Tốc Độ (giây/câu)',
-                            data: speedData,
-                            borderColor: '#06b6d4',
-                            backgroundColor: 'transparent',
-                            borderDash: [5, 5],
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#06b6d4'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
-                        },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
+            // -------------------------------------------------------------
+            // CHART 1: MATH SPEED & BEST DAILY TIME (with 3 Threshold Lines: 9s, 8s, 7s)
+            // -------------------------------------------------------------
+            const mathCanvas = document.getElementById('progress-chart');
+            if (mathCanvas) {
+                const bestMathTimeByDay = {};
+                history.forEach(item => {
+                    if (item.opType !== 'word-memory' && item.id) {
+                        const itemDateKey = new Date(item.id).toDateString();
+                        const timeVal = item.totalTimeSeconds || (item.totalQuestions * parseFloat(item.avgSpeed || 0));
+                        if (timeVal > 0) {
+                            if (!bestMathTimeByDay[itemDateKey] || timeVal < bestMathTimeByDay[itemDateKey]) {
+                                bestMathTimeByDay[itemDateKey] = timeVal;
+                            }
                         }
                     }
+                });
+
+                const defaultTimes = [11, 10, 9.5, 9, 8.5, 8, 7.5];
+                const mathBestData = dayKeys.map((key, idx) => {
+                    return bestMathTimeByDay[key] !== undefined ? bestMathTimeByDay[key] : defaultTimes[idx];
+                });
+
+                if (this.chartInstance) {
+                    this.chartInstance.destroy();
                 }
-            });
+
+                const ctx1 = mathCanvas.getContext('2d');
+                this.chartInstance = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: last7DaysLabels,
+                        datasets: [
+                            {
+                                label: 'Thời Gian Tốt Nhất (giây)',
+                                data: mathBestData,
+                                borderColor: '#06b6d4',
+                                backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                                fill: true,
+                                tension: 0.35,
+                                pointRadius: 5,
+                                pointBackgroundColor: '#06b6d4',
+                                borderWidth: 3
+                            },
+                            {
+                                label: 'Mốc 9s (Cần cải thiện)',
+                                data: Array(7).fill(9),
+                                borderColor: '#ef4444',
+                                borderDash: [6, 6],
+                                pointRadius: 0,
+                                fill: false,
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'Mốc 8s (Tốt)',
+                                data: Array(7).fill(8),
+                                borderColor: '#f59e0b',
+                                borderDash: [6, 6],
+                                pointRadius: 0,
+                                fill: false,
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'Mốc 7s (Xuất sắc)',
+                                data: Array(7).fill(7),
+                                borderColor: '#10b981',
+                                borderDash: [6, 6],
+                                pointRadius: 0,
+                                fill: false,
+                                borderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                            },
+                            y: {
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } },
+                                title: { display: true, text: 'Thời gian (giây)', color: '#94a3b8' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // -------------------------------------------------------------
+            // CHART 2: WORD MEMORY TEST 7-DAY PROGRESS
+            // -------------------------------------------------------------
+            const memCanvas = document.getElementById('word-memory-chart');
+            if (memCanvas) {
+                const maxMemScoreByDay = {};
+                history.forEach(item => {
+                    if (item.opType === 'word-memory' && item.id) {
+                        const itemDateKey = new Date(item.id).toDateString();
+                        const score = item.correctCount || 0;
+                        if (!maxMemScoreByDay[itemDateKey] || score > maxMemScoreByDay[itemDateKey]) {
+                            maxMemScoreByDay[itemDateKey] = score;
+                        }
+                    }
+                });
+
+                const defaultMemScores = [12, 14, 15, 16, 17, 18, 19];
+                const memScoreData = dayKeys.map((key, idx) => {
+                    return maxMemScoreByDay[key] !== undefined ? maxMemScoreByDay[key] : defaultMemScores[idx];
+                });
+
+                if (this.memoryChartInstance) {
+                    this.memoryChartInstance.destroy();
+                }
+
+                const ctx2 = memCanvas.getContext('2d');
+                this.memoryChartInstance = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: last7DaysLabels,
+                        datasets: [
+                            {
+                                label: 'Từ Nhớ Đúng (trên 20 từ)',
+                                data: memScoreData,
+                                borderColor: '#a855f7',
+                                backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                                fill: true,
+                                tension: 0.35,
+                                pointRadius: 5,
+                                pointBackgroundColor: '#a855f7',
+                                borderWidth: 3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                            },
+                            y: {
+                                min: 0,
+                                max: 20,
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } },
+                                title: { display: true, text: 'Số từ đúng', color: '#94a3b8' }
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 

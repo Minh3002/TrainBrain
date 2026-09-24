@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rèn Luyện Trí Nhớ & Tính Toán Nhẩm</title>
-    <meta name="description" content="Ứng dụng rèn luyện tính nhẩm nhanh và kiểm tra trí nhớ cuối tuần (nhớ từ vựng). Hỗ trợ bàn phím số, trắc nghiệm, viết tay canvas và biểu đồ theo dõi tiến độ.">
+    <title>Tính Nhanh Luyện Não - Rèn Luyện Trí Nhớ</title>
+    <meta name="description" content="Ứng dụng Tính nhanh luyện nào và kiểm tra trí nhớ cuối tuần. Hỗ trợ bàn phím số, trắc nghiệm và biểu đồ theo dõi tiến độ.">
     <meta name="theme-color" content="#0a0e1a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -38,7 +38,7 @@
                         <path d="M12 6v6l4 2"/>
                     </svg>
                 </div>
-                <span class="brand-title">Trí Nhớ & Tính Nhẩm</span>
+                <span class="brand-title">Tính Nhanh Luyện Não</span>
             </div>
             <div class="header-actions">
                 <button id="sound-toggle-btn" class="icon-btn" title="Bật/Tắt âm thanh" aria-label="Âm thanh">
@@ -89,15 +89,15 @@
                             </defs>
                         </svg>
                     </div>
-                    <h1 class="hero-title">Rèn Luyện Trí Nhớ & Tính Nhẩm</h1>
-                    <p class="hero-subtitle">Tăng phản xạ não bộ hàng ngày & Kiểm tra trí nhớ từ cuối tuần</p>
+                    <h1 class="hero-title">Tính Nhanh Luyện Não</h1>
+                    <p class="hero-subtitle">Phản xạ tính nhẩm thần tốc & Kiểm tra trí nhớ từ vựng</p>
                 </div>
 
-                <!-- Mode Switcher Tabs (Tính toán nhẩm vs Kiểm tra trí nhớ cuối tuần) -->
+                <!-- Mode Switcher Tabs -->
                 <div class="main-mode-switcher glass-panel">
                     <button type="button" class="main-mode-btn active" id="mode-math-btn" data-mode="math">
                         <span class="mm-icon">🧮</span>
-                        <span class="mm-title">Tính Toán Nhẩm</span>
+                        <span class="mm-title">Tính Nhanh Luyện Não</span>
                     </button>
                     <button type="button" class="main-mode-btn" id="mode-memory-btn" data-mode="word-memory">
                         <span class="mm-icon">🧠</span>
@@ -113,13 +113,16 @@
                         <label class="form-label">Phép toán:</label>
                         <div class="op-grid">
                             <button type="button" class="op-chip active" data-op="mix">
-                                <span class="op-symbol">🎲</span> Hỗn hợp 1 Chữ Số
+                                <span class="op-symbol">🎲</span> Hỗn hợp (+, -, ×)
                             </button>
                             <button type="button" class="op-chip" data-op="add">
-                                <span class="op-symbol">+</span> Phép Cộng (1 Chữ Số)
+                                <span class="op-symbol">+</span> Phép Cộng
                             </button>
                             <button type="button" class="op-chip" data-op="sub">
-                                <span class="op-symbol">-</span> Phép Trừ (1 Chữ Số)
+                                <span class="op-symbol">-</span> Phép Trừ
+                            </button>
+                            <button type="button" class="op-chip" data-op="mul">
+                                <span class="op-symbol">×</span> Phép Nhân
                             </button>
                         </div>
                     </div>
@@ -130,7 +133,7 @@
                         <div class="segment-control" id="question-count-segment">
                             <button type="button" class="segment-btn active" data-count="10">10 câu</button>
                             <button type="button" class="segment-btn" data-count="20">20 câu</button>
-                            <button type="button" class="segment-btn" data-count="40">40 câu</button>
+                            <button type="button" class="segment-btn" data-count="90">90 câu</button>
                         </div>
                     </div>
                 </div>
@@ -198,8 +201,15 @@
             <section id="quiz-screen" class="screen">
                 <!-- Top Progress & Timer Bar -->
                 <div class="quiz-top-bar glass-panel">
+                    <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
                     <div class="progress-info">
-                        <span class="q-badge" id="quiz-progress-text">Bài toán 1/40</span>
+                        <span class="q-badge" id="quiz-progress-text">Bài toán 1/10</span>
                         <div class="streak-badge hidden" id="streak-badge">
                             🔥 <span id="streak-count">0</span>
                         </div>
@@ -211,7 +221,7 @@
 
                 <!-- Progress Bar Line -->
                 <div class="progress-bar-wrapper">
-                    <div class="progress-bar-fill" id="quiz-progress-fill" style="width: 2.5%;"></div>
+                    <div class="progress-bar-fill" id="quiz-progress-fill" style="width: 10%;"></div>
                 </div>
 
                 <!-- Central Question Display Card -->
@@ -221,11 +231,11 @@
                         <span class="math-expr" id="math-expr">7 + 8 = ?</span>
                     </div>
                     <div class="user-answer-preview" id="user-answer-preview">
-                        <span class="placeholder">Nhập hoặc vẽ câu trả lời...</span>
+                        <span class="placeholder">Nhập câu trả lời...</span>
                     </div>
                 </div>
 
-                <!-- Answer Input Method Tabs (2 Tabs) -->
+                <!-- Answer Input Method Tabs -->
                 <div class="answer-tabs-container">
                     <div class="tabs-header">
                         <button class="tab-btn active" id="tab-btn-keypad" data-target="tab-keypad">
@@ -240,12 +250,8 @@
                             </svg>
                             Bàn phím & Trắc nghiệm
                         </button>
-                        <button class="tab-btn" id="tab-btn-canvas" data-target="tab-canvas">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                                <path d="M12 20h9"></path>
-                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                            </svg>
-                            Viết tay (Canvas)
+                        <button class="tab-btn hidden" id="tab-btn-canvas" data-target="tab-canvas" style="display:none;">
+                            ✍️ Viết tay
                         </button>
                     </div>
 
@@ -289,37 +295,9 @@
                             </div>
                         </div>
 
-                        <!-- Tab 2: Single Canvas with ML Digit Recognition & Dynamic Segmentation -->
-                        <div id="tab-canvas" class="tab-content">
-                            <div class="canvas-wrapper glass-panel">
-                                <div class="canvas-header-info">
-                                    <span>✍️ Viết tay kết quả (Viết 1 hoặc 2 chữ số tự do)</span>
-                                    <span class="canvas-recognized-badge" id="canvas-recognized-text">Nhận diện: --</span>
-                                </div>
-
-                                <canvas id="handwriting-canvas" width="360" height="180"></canvas>
-
-                                <!-- Top-K Suggestions Bar (1-Tap Selection) -->
-                                <div id="canvas-suggestions-container" class="canvas-suggestions-wrapper hidden">
-                                    <span class="suggestions-label">💡 Gợi ý AI (Chạm để đổi):</span>
-                                    <div id="canvas-suggestions-list" class="suggestions-list">
-                                        <!-- Dynamically generated suggestion chips -->
-                                    </div>
-                                </div>
-
-                                <div class="canvas-actions">
-                                    <button type="button" class="btn btn-sm btn-secondary" id="canvas-clear-btn">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                        </svg>
-                                        Xóa Nét Vẽ
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-accent" id="canvas-recognize-btn">
-                                        🔍 AI Nhận Diện Chữ Số
-                                    </button>
-                                </div>
-                            </div>
+                        <!-- Tab 2: Canvas (Hidden for now) -->
+                        <div id="tab-canvas" class="tab-content hidden" style="display:none;">
+                            <canvas id="handwriting-canvas" width="360" height="180"></canvas>
                         </div>
                     </div>
                 </div>
@@ -337,8 +315,15 @@
             <section id="word-memory-screen" class="screen">
                 <!-- Memory Header -->
                 <div class="wm-header glass-panel">
+                    <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
                     <div class="wm-header-left">
-                        <span class="wm-title-badge">🧠 Kiểm Tra Trí Nhớ Cuối Tuần</span>
+                        <span class="wm-title-badge">🧠 Nhớ Từ (Cuối Tuần)</span>
                         <span class="wm-status-text" id="wm-status-text">Giai đoạn 1: Ghi nhớ 20 từ</span>
                     </div>
                     <div class="wm-timer-badge" id="wm-timer-badge">
@@ -366,7 +351,7 @@
                 <!-- PHASE 2: RECALL INPUT PHASE (Khung điền 20 từ) -->
                 <div id="wm-recall-phase" class="wm-phase-container hidden">
                     <div class="wm-instruction-card glass-panel">
-                        <p>Danh sách từ đã bị ẩn! Hãy gõ lại các từ bạn vừa nhớ được vào các khung bên dưới:</p>
+                        <p>Danh sách từ đã bị ẩn! Hãy gõ lại các từ bạn vừa nhớ được vào các khung bên dưới (không cần đúng thứ tự):</p>
                     </div>
 
                     <div class="recall-grid" id="wm-recall-grid">
@@ -380,7 +365,7 @@
                     </div>
                 </div>
 
-                <!-- PHASE 3: MEMORY RESULT PHASE (Kết quả chấm điểm nhớ từ) -->
+                <!-- PHASE 3: MEMORY RESULT PHASE -->
                 <div id="wm-result-phase" class="wm-phase-container hidden">
                     <div class="result-header">
                         <div class="trophy-badge pulse-glow" id="wm-trophy-icon">🏆</div>
@@ -423,6 +408,15 @@
 
             <!-- 4. RESULT SCREEN (MATH) -->
             <section id="result-screen" class="screen">
+                <div class="screen-top-bar">
+                    <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
+                </div>
                 <div class="result-header">
                     <div class="trophy-badge pulse-glow">🏆</div>
                     <h1 class="result-title">Hoàn Thành Bài Tập!</h1>
@@ -433,13 +427,13 @@
                 <div class="result-grid">
                     <div class="result-card glass-panel highlight">
                         <span class="rc-label">Số Câu Đúng</span>
-                        <span class="rc-value" id="res-correct-count">38 / 40</span>
-                        <span class="rc-sub" id="res-accuracy-pct">95% chính xác</span>
+                        <span class="rc-value" id="res-correct-count">10 / 10</span>
+                        <span class="rc-sub" id="res-accuracy-pct">100% chính xác</span>
                     </div>
 
                     <div class="result-card glass-panel">
                         <span class="rc-label">Tổng Thời Gian</span>
-                        <span class="rc-value" id="res-total-time">1m 45s</span>
+                        <span class="rc-value" id="res-total-time">0m 45s</span>
                         <span class="rc-sub">Tổng phiên tập</span>
                     </div>
 
@@ -451,7 +445,7 @@
 
                     <div class="result-card glass-panel">
                         <span class="rc-label">Chuỗi Đúng Tốt Nhất</span>
-                        <span class="rc-value fire" id="res-max-streak">14 🔥</span>
+                        <span class="rc-value fire" id="res-max-streak">10 🔥</span>
                         <span class="rc-sub">Câu đúng liên tiếp</span>
                     </div>
                 </div>
@@ -477,9 +471,16 @@
                 </div>
             </section>
 
-            <!-- 5. SETTINGS SCREEN (MÀN HÌNH CÀI ĐẶT) -->
+            <!-- 5. SETTINGS SCREEN -->
             <section id="settings-screen" class="screen">
                 <div class="settings-header">
+                    <button type="button" class="back-nav-btn" data-back="home" title="Quay lại">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
                     <h1 class="settings-title">⚙️ Cài Đặt Ứng Dụng</h1>
                     <p class="settings-subtitle">Cấu hình trải nghiệm luyện tập & lưu vĩnh viễn vào bộ nhớ</p>
                 </div>
@@ -492,7 +493,7 @@
                         <label class="form-label">Phép toán mặc định khi khởi động:</label>
                         <div class="op-grid">
                             <button type="button" class="op-chip active" id="set-op-mix" data-set-op="mix">
-                                <span class="op-symbol">🎲</span> Hỗn hợp
+                                <span class="op-symbol">🎲</span> Hỗn hợp (+, -, ×)
                             </button>
                             <button type="button" class="op-chip" id="set-op-add" data-set-op="add">
                                 <span class="op-symbol">+</span> Phép Cộng
@@ -503,9 +504,6 @@
                             <button type="button" class="op-chip" id="set-op-mul" data-set-op="mul">
                                 <span class="op-symbol">×</span> Phép Nhân
                             </button>
-                            <button type="button" class="op-chip" id="set-op-div" data-set-op="div">
-                                <span class="op-symbol">÷</span> Phép Chia
-                            </button>
                         </div>
                     </div>
 
@@ -515,18 +513,7 @@
                         <div class="segment-control" id="settings-qcount-segment">
                             <button type="button" class="segment-btn active" data-set-count="10">10 câu</button>
                             <button type="button" class="segment-btn" data-set-count="20">20 câu</button>
-                            <button type="button" class="segment-btn" data-set-count="40">40 câu</button>
-                        </div>
-                    </div>
-
-                    <!-- Default Time Limit per question -->
-                    <div class="form-group">
-                        <label class="form-label">Thời gian đếm ngược mỗi câu:</label>
-                        <div class="segment-control" id="settings-time-segment">
-                            <button type="button" class="segment-btn active" data-set-time="10">10 giây</button>
-                            <button type="button" class="segment-btn" data-set-time="15">15 giây</button>
-                            <button type="button" class="segment-btn" data-set-time="30">30 giây</button>
-                            <button type="button" class="segment-btn" data-set-time="0">Không giới hạn</button>
+                            <button type="button" class="segment-btn" data-set-count="90">90 câu</button>
                         </div>
                     </div>
 
@@ -560,11 +547,33 @@
             </section>
         </main>
 
+        <!-- READY CONFIRMATION POPUP MODAL -->
+        <div id="ready-modal" class="modal-overlay hidden">
+            <div class="modal-content glass-panel ready-card">
+                <div class="ready-icon pulse-glow">⏱️</div>
+                <h2 class="ready-title">Bạn đã sẵn sàng chưa?</h2>
+                <p class="ready-desc">Bài tập gồm các phép tính 1 chữ số (+, -, ×). Đồng hồ tính tổng thời gian sẽ bắt đầu chạy ngay khi bạn bấm Sẵn sàng!</p>
+                <div class="ready-actions">
+                    <button type="button" id="ready-start-btn" class="btn btn-primary btn-lg pulse-glow btn-grow">🚀 Sẵn Sàng!</button>
+                    <button type="button" id="ready-cancel-btn" class="btn btn-secondary">Quay lại</button>
+                </div>
+            </div>
+        </div>
+
         <!-- STATS & TRACKING CHARTS MODAL OVERLAY -->
         <div id="stats-modal" class="modal-overlay hidden">
             <div class="modal-content glass-panel">
                 <div class="modal-header">
-                    <h2 class="modal-title">📊 Biểu Đồ Thống Kê Tiến Độ</h2>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button type="button" class="back-nav-btn" id="modal-back-btn" title="Quay lại">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Back
+                        </button>
+                        <h2 class="modal-title">📊 Biểu Đồ Thống Kê Tiến Độ</h2>
+                    </div>
                     <button id="close-stats-modal-btn" class="close-btn" aria-label="Đóng">&times;</button>
                 </div>
 
@@ -596,13 +605,24 @@
                         </div>
                     </div>
 
-                    <!-- 7-Day Progress Chart Container -->
+                    <!-- 2 Main Charts Container -->
+                    <!-- Chart 1: Math Speed & Best Daily Time with 3 thresholds -->
                     <div class="chart-container-card glass-panel">
                         <div class="chart-header">
-                            <span class="chart-title">📈 Xu Hướng Tiến Bộ (7 Ngày Qua)</span>
+                            <span class="chart-title">⚡ Thời Gian Tính Toán Tốt Nhất (7 Ngày Qua)</span>
                         </div>
                         <div class="chart-canvas-wrapper">
                             <canvas id="progress-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Word Memory Test 7-Day Progress -->
+                    <div class="chart-container-card glass-panel" style="margin-top: 15px;">
+                        <div class="chart-header">
+                            <span class="chart-title">🧠 Kết Quả Nhớ Từ (7 Ngày Qua)</span>
+                        </div>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="word-memory-chart"></canvas>
                         </div>
                     </div>
 

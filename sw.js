@@ -1,4 +1,4 @@
-const CACHE_NAME = 'math-brain-pwa-v3';
+const CACHE_NAME = 'math-brain-pwa-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
