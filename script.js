@@ -846,10 +846,10 @@
             });
 
             // Main Mode Switcher
-            document.querySelectorAll('.main-mode-btn').forEach(btn => {
+            document.querySelectorAll('.main-mode-btn, .game-mode-card').forEach(btn => {
                 btn.addEventListener('click', () => {
                     soundEngine.playClick();
-                    document.querySelectorAll('.main-mode-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.main-mode-btn, .game-mode-card').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     this.config.activeMainMode = btn.dataset.mode;
 
@@ -1390,40 +1390,25 @@
         }
 
         setUserAnswer(val) {
-            if (this.quizState.isTransitioning) return;
-
             this.quizState.userAnswerInput = val;
             const preview = document.getElementById('user-answer-preview');
-            if (preview) {
+            if (preview && !this.quizState.isTransitioning) {
                 if (val !== '') {
-                    preview.innerHTML = `<span class="entered-val" style="font-size:2rem; font-weight:800; color:#06b6d4;">${val}</span>`;
+                    preview.innerHTML = `<span class="entered-val" style="font-size:2rem; font-weight:800; color:var(--primary);">${val}</span>`;
                 } else {
-                    preview.innerHTML = `<span class="placeholder">Nhập hoặc vẽ câu trả lời...</span>`;
+                    preview.innerHTML = `<span class="placeholder">Nhập câu trả lời...</span>`;
                 }
             }
 
             // Tự động kiểm tra câu trả lời khi dùng Bàn phím số / Bàn phím vật lý
-            if (val !== '' && this.quizState.active && this.quizState.questions[this.quizState.currentQIndex]) {
+            if (val !== '' && this.quizState.active && !this.quizState.isTransitioning && this.quizState.questions[this.quizState.currentQIndex]) {
                 const currentQ = this.quizState.questions[this.quizState.currentQIndex];
                 const targetStr = currentQ.answer.toString();
 
-                // 1. Nhập đúng khớp tuyệt đối -> Tự động chuyển câu tiếp theo sau 300ms!
                 if (val === targetStr) {
-                    this.quizState.isTransitioning = true;
-                    this.submitCurrentAnswer();
-                } else {
-                    // 2. Nhập sai và số chữ số nhập vào đã đạt hoặc vượt quá độ dài đáp án
-                    if (val.length >= targetStr.length) {
-                        soundEngine.playWrong();
-                        const card = document.getElementById('question-card');
-                        if (card) {
-                            card.classList.remove('wrong-flash');
-                            void card.offsetWidth; // trigger reflow
-                            card.classList.add('wrong-flash');
-                        }
-                        // Ngay lập tức xóa sạch số hiển thị ở ô preview và biến lưu trữ về "" để user gõ lại số khác
-                        this.setUserAnswer('');
-                    }
+                    this.evaluateAnswerAndShowFeedback(val);
+                } else if (val.length >= targetStr.length) {
+                    this.evaluateAnswerAndShowFeedback(val);
                 }
             }
         }
@@ -1472,11 +1457,20 @@
             this.quizState.isTransitioning = false;
             this.quizState.currentQIndex = index;
             this.quizState.userAnswerInput = '';
-            this.setUserAnswer('');
             this.handwritingCanvas?.clear();
 
             const card = document.getElementById('question-card');
-            if (card) card.classList.remove('correct-flash', 'wrong-flash');
+            if (card) {
+                card.classList.remove('correct-flash', 'wrong-flash');
+                const toast = card.querySelector('.quiz-encouragement-toast');
+                if (toast) toast.remove();
+            }
+
+            const preview = document.getElementById('user-answer-preview');
+            if (preview) {
+                preview.classList.remove('correct', 'incorrect');
+                preview.innerHTML = `<span class="placeholder">Nhập câu trả lời...</span>`;
+            }
 
             document.getElementById('quiz-progress-text').textContent = `Bài toán ${index + 1}/${this.config.questionCount}`;
             const pct = ((index + 1) / this.config.questionCount) * 100;
@@ -1498,10 +1492,12 @@
             q.choices.forEach((choiceVal, idx) => {
                 if (mcqBtns[idx]) {
                     mcqBtns[idx].textContent = choiceVal;
+                    mcqBtns[idx].classList.remove('correct', 'incorrect');
                     mcqBtns[idx].onclick = () => {
+                        if (this.quizState.isTransitioning) return;
                         soundEngine.playClick();
                         this.setUserAnswer(choiceVal.toString());
-                        this.submitCurrentAnswer();
+                        this.evaluateAnswerAndShowFeedback(choiceVal.toString(), mcqBtns[idx], mcqBtns);
                     };
                 }
             });
@@ -1510,11 +1506,13 @@
         }
 
         skipCurrentQuestion() {
-            this.recordQuestionResult(false, 'Bỏ qua', false);
+            if (this.quizState.isTransitioning) return;
+            this.evaluateAnswerAndShowFeedback('Bỏ qua');
         }
 
         async submitCurrentAnswer() {
-            // Nếu ở Tab Viết tay và chưa bấm nhận diện nhưng đã vẽ nét ➔ Gọi AI trước khi gửi
+            if (this.quizState.isTransitioning) return;
+
             const canvasTab = document.getElementById('tab-canvas');
             if (canvasTab && canvasTab.classList.contains('active') && this.quizState.userAnswerInput === '') {
                 if (this.handwritingCanvas && this.handwritingCanvas.strokes.length > 0) {
@@ -1523,40 +1521,126 @@
             }
 
             if (this.quizState.userAnswerInput === '') return;
-            const userNum = parseInt(this.quizState.userAnswerInput, 10);
-            const q = this.quizState.questions[this.quizState.currentQIndex];
-            this.recordQuestionResult(userNum === q.answer, userNum.toString(), false);
+            this.evaluateAnswerAndShowFeedback(this.quizState.userAnswerInput);
         }
 
-        recordQuestionResult(isCorrect, submittedAnsStr, isTimeout) {
-            const timeSpentSec = ((Date.now() - this.quizState.questionStartTime) / 1000).toFixed(1);
-            const q = this.quizState.questions[this.quizState.currentQIndex];
+        evaluateAnswerAndShowFeedback(submittedValStr, clickedMcqBtn = null, allMcqBtns = null) {
+            if (this.quizState.isTransitioning) return;
+            this.quizState.isTransitioning = true;
 
-            this.quizState.userAnswers.push({
-                question: q.exprStr, opName: q.opName, correctAnswer: q.answer,
-                userAnswer: submittedAnsStr, isCorrect, isTimeout,
-                timeSpentSec: parseFloat(timeSpentSec)
-            });
+            const q = this.quizState.questions[this.quizState.currentQIndex];
+            const userNum = parseInt(submittedValStr, 10);
+            const isCorrect = userNum === q.answer;
 
             const card = document.getElementById('question-card');
+            const preview = document.getElementById('user-answer-preview');
 
             if (isCorrect) {
                 soundEngine.playCorrect();
+
+                if (card) {
+                    card.classList.remove('wrong-flash');
+                    card.classList.add('correct-flash');
+                }
+                if (preview) {
+                    preview.classList.remove('incorrect');
+                    preview.classList.add('correct');
+                }
+                if (clickedMcqBtn) {
+                    clickedMcqBtn.classList.remove('incorrect');
+                    clickedMcqBtn.classList.add('correct');
+                }
+
                 this.quizState.correctCount++;
                 this.quizState.currentStreak++;
                 if (this.quizState.currentStreak > this.quizState.maxStreak) {
                     this.quizState.maxStreak = this.quizState.currentStreak;
                 }
-                if (card) card.classList.add('correct-flash');
-                setTimeout(() => this.loadQuestion(this.quizState.currentQIndex + 1), 300);
+
+                this.quizState.userAnswers.push({
+                    question: q.exprStr, opName: q.opName, correctAnswer: q.answer,
+                    userAnswer: submittedValStr, isCorrect: true, isTimeout: false,
+                    timeSpentSec: parseFloat(((Date.now() - this.quizState.questionStartTime) / 1000).toFixed(1))
+                });
+
+                // Hiển thị trạng thái xanh đúng trong 600ms trước khi chuyển câu
+                setTimeout(() => {
+                    this.loadQuestion(this.quizState.currentQIndex + 1);
+                }, 600);
+
             } else {
-                if (!isTimeout) soundEngine.playWrong();
+                soundEngine.playWrong();
+
+                if (card) {
+                    card.classList.remove('correct-flash');
+                    card.classList.add('wrong-flash');
+                }
+                if (preview) {
+                    preview.classList.remove('correct');
+                    preview.classList.add('incorrect');
+                }
+                if (clickedMcqBtn) {
+                    clickedMcqBtn.classList.remove('correct');
+                    clickedMcqBtn.classList.add('incorrect');
+
+                    // Highlight đáp án đúng bằng màu xanh lá cho trẻ dễ nhận biết
+                    if (allMcqBtns) {
+                        allMcqBtns.forEach(btn => {
+                            if (parseInt(btn.textContent, 10) === q.answer) {
+                                btn.classList.add('correct');
+                            }
+                        });
+                    }
+                }
+
+                this.showEncouragementToast('💪 Gần đúng rồi! Thử lại nhé!');
+
                 this.quizState.wrongCount++;
                 this.quizState.currentStreak = 0;
-                if (card) card.classList.add('wrong-flash');
-                // Giữ nguyên câu hỏi cho đến khi làm đúng!
+
+                this.quizState.userAnswers.push({
+                    question: q.exprStr, opName: q.opName, correctAnswer: q.answer,
+                    userAnswer: submittedValStr, isCorrect: false, isTimeout: false,
+                    timeSpentSec: parseFloat(((Date.now() - this.quizState.questionStartTime) / 1000).toFixed(1))
+                });
+
+                // Hiển thị trạng thái đỏ và đáp án đúng trong 900ms trước khi cho nhập lại
+                setTimeout(() => {
+                    this.quizState.isTransitioning = false;
+                    this.quizState.userAnswerInput = '';
+                    const prevEl = document.getElementById('user-answer-preview');
+                    if (prevEl) {
+                        prevEl.classList.remove('incorrect', 'correct');
+                        prevEl.innerHTML = `<span class="placeholder">Nhập câu trả lời...</span>`;
+                    }
+                    if (card) card.classList.remove('wrong-flash', 'correct-flash');
+                    if (allMcqBtns) {
+                        allMcqBtns.forEach(btn => btn.classList.remove('correct', 'incorrect'));
+                    }
+                }, 900);
             }
         }
+
+        showEncouragementToast(msg) {
+            const card = document.getElementById('question-card');
+            if (!card) return;
+            let toast = card.querySelector('.quiz-encouragement-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.className = 'quiz-encouragement-toast';
+                card.appendChild(toast);
+            }
+            toast.textContent = msg;
+            setTimeout(() => {
+                toast?.remove();
+            }, 1800);
+        }
+
+        recordQuestionResult(isCorrect, submittedAnsStr, isTimeout) {
+            // Maintained for backward compatibility if called directly
+            this.evaluateAnswerAndShowFeedback(submittedAnsStr);
+        }
+
 
         finishQuiz() {
             this.quizState.active = false;
@@ -1622,6 +1706,20 @@
             document.getElementById('qs-total-games').textContent = `${agg.totalGames} phiên`;
             document.getElementById('qs-avg-acc').textContent = `${agg.avgAccuracy}%`;
             document.getElementById('qs-avg-speed').textContent = `${agg.avgSpeed}s/câu`;
+
+            // Update Gamification section elements if present
+            const history = StatsManager.getHistory();
+            const totalQuestionsToday = agg.totalQuestions || 0;
+            const xpToday = totalQuestionsToday * 12;
+            const bestStreak = history.reduce((max, item) => Math.max(max, item.maxStreak || 0), 0);
+
+            const streakEl = document.getElementById('gami-streak-val');
+            const xpEl = document.getElementById('gami-xp-val');
+            const bestEl = document.getElementById('gami-best-val');
+
+            if (streakEl) streakEl.textContent = `${bestStreak > 0 ? bestStreak : 5} câu`;
+            if (xpEl) xpEl.textContent = `${xpToday} XP`;
+            if (bestEl) bestEl.textContent = history.length > 0 ? `${history[0].correctCount}/${history[0].totalCount}` : '10/10';
         }
 
         // ==========================================================================

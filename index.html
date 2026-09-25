@@ -15,8 +15,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@600;700;800&display=swap"
         rel="stylesheet">
+
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Chart.js for Tracking & Progress Line Charts -->
@@ -37,38 +38,42 @@
         <!-- Top Navigation Header -->
         <header class="app-header">
             <div class="brand" id="brand-home-btn">
-                <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path
-                            d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.1L14 21H10l-1.8-1.9C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9z" />
-                        <path d="M12 6v6l4 2" />
+                <div class="brand-mascot-mini">
+                    <svg viewBox="0 0 100 100" fill="none" class="mini-mascot-svg">
+                        <path d="M50 15C32 15 20 28 20 45C20 58 27 68 37 73.5L38 85H62L63 73.5C73 68 80 58 80 45C80 28 68 15 50 15Z" fill="#FF7597" />
+                        <circle cx="38" cy="45" r="5" fill="#1E293B" />
+                        <circle cx="62" cy="45" r="5" fill="#1E293B" />
+                        <circle cx="40" cy="43" r="2" fill="#FFFFFF" />
+                        <circle cx="64" cy="43" r="2" fill="#FFFFFF" />
+                        <ellipse cx="32" cy="52" rx="4" ry="2.5" fill="#FF477E" opacity="0.6" />
+                        <ellipse cx="68" cy="52" rx="4" ry="2.5" fill="#FF477E" opacity="0.6" />
+                        <path d="M43 55Q50 63 57 55" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
                     </svg>
                 </div>
-                <span class="brand-title">Tính Nhanh Luyện Não</span>
+                <span class="brand-title">Tính Nhanh!</span>
             </div>
             <div class="header-actions">
-                <button id="sound-toggle-btn" class="icon-btn" title="Bật/Tắt âm thanh" aria-label="Âm thanh">
-                    <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button id="sound-toggle-btn" class="icon-btn pastel-btn" title="Bật/Tắt âm thanh" aria-label="Âm thanh">
+                    <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                     </svg>
                     <svg id="sound-icon-off" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
+                        stroke-width="2.2">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <line x1="23" y1="9" x2="17" y2="15"></line>
                         <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                 </button>
-                <button id="stats-header-btn" class="icon-btn" title="Biểu đồ thống kê" aria-label="Thống kê">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button id="stats-header-btn" class="icon-btn pastel-btn" title="Thống kê" aria-label="Thống kê">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <line x1="18" y1="20" x2="18" y2="10"></line>
                         <line x1="12" y1="20" x2="12" y2="4"></line>
                         <line x1="6" y1="20" x2="6" y2="14"></line>
                     </svg>
                 </button>
-                <button id="settings-header-btn" class="icon-btn" title="Cài đặt" aria-label="Cài đặt">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button id="settings-header-btn" class="icon-btn pastel-btn" title="Cài đặt" aria-label="Cài đặt">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path
                             d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
@@ -82,48 +87,91 @@
         <main class="main-content">
             <!-- 1. HOME SCREEN -->
             <section id="home-screen" class="screen active">
-                <div class="hero-section">
-                    <div class="brain-glow-container">
-                        <div class="brain-glow"></div>
-                        <svg class="hero-brain-svg" viewBox="0 0 100 100" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M50 15C32 15 20 28 20 45C20 58 27 68 37 73.5L38 85H62L63 73.5C73 68 80 58 80 45C80 28 68 15 50 15Z"
-                                fill="url(#brain-grad-1)" opacity="0.85" />
-                            <path d="M35 38C35 32 41 27 48 27C52 27 55 29 55 32C55 36 50 38 45 40C40 42 35 45 35 52V55"
-                                stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" />
-                            <circle cx="35" cy="65" r="3" fill="#FFFFFF" />
-                            <circle cx="65" cy="65" r="3" fill="#FFFFFF" />
-                            <path d="M42 68C45 71 55 71 58 68" stroke="#FFFFFF" stroke-width="3"
-                                stroke-linecap="round" />
-                            <defs>
-                                <linearGradient id="brain-grad-1" x1="20" y1="15" x2="80" y2="85"
-                                    gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#2563EB" />
-                                    <stop offset="1" stop-color="#06B6D4" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
+                <!-- Hero Greeting Card with Mascot "Bạn Não Nhỏ" -->
+                <div class="hero-section playful-hero">
+                    <div class="hero-text-content">
+                        <span class="hero-badge">🧠 Xin chào bạn nhỏ!</span>
+                        <h1 class="hero-title">Sẵn sàng thử thách bộ nào chưa?</h1>
+                        <p class="hero-subtitle">Luyện tính nhẩm mỗi ngày và xem mình tiến bộ nhé!</p>
                     </div>
-                    <h1 class="hero-title">Tính Nhanh Luyện Não</h1>
-                    <p class="hero-subtitle">Phản xạ tính nhẩm thần tốc & Kiểm tra trí nhớ từ vựng</p>
+
+                    <div class="mascot-wrapper">
+                        <div class="mascot-cloud-bg">☁️</div>
+                        <div class="mascot-character mascot-happy" id="hero-mascot">
+                            <!-- SVG Mascot "Bạn Não Nhỏ" -->
+                            <svg viewBox="0 0 140 140" fill="none" class="mascot-svg">
+                                <!-- Shadow -->
+                                <ellipse cx="70" cy="128" rx="42" ry="8" fill="#CBD5E1" opacity="0.6" />
+                                <!-- Brain Body -->
+                                <path d="M70 20C46 20 28 36 28 60C28 78 37 90 50 97L52 112H88L90 97C103 90 112 78 112 60C112 36 94 20 70 20Z" fill="url(#brain-grad-soft)" />
+                                <!-- Brain Grooves/Folds -->
+                                <path d="M48 38C42 42 40 50 44 56C48 60 52 54 50 48" stroke="#FF5C8D" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.4" />
+                                <path d="M92 38C98 42 100 50 96 56C92 60 88 54 90 48" stroke="#FF5C8D" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.4" />
+                                <path d="M62 26C68 22 72 22 78 26" stroke="#FF5C8D" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.4" />
+                                <!-- Eyes -->
+                                <circle cx="54" cy="62" r="7" fill="#1E293B" />
+                                <circle cx="86" cy="62" r="7" fill="#1E293B" />
+                                <circle cx="56" cy="59" r="2.8" fill="#FFFFFF" />
+                                <circle cx="88" cy="59" r="2.8" fill="#FFFFFF" />
+                                <!-- Rosy Cheeks -->
+                                <ellipse cx="44" cy="70" rx="6" ry="3.8" fill="#FF477E" opacity="0.65" />
+                                <ellipse cx="96" cy="70" rx="6" ry="3.8" fill="#FF477E" opacity="0.65" />
+                                <!-- Smile -->
+                                <path d="M60 72Q70 83 80 72" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none" />
+                                <!-- Cute Arms & Glasses -->
+                                <path d="M30 65C22 68 18 75 24 78" stroke="#FF85A1" stroke-width="4.5" stroke-linecap="round" fill="none" />
+                                <path d="M110 65C118 68 122 75 116 78" stroke="#FF85A1" stroke-width="4.5" stroke-linecap="round" fill="none" />
+                                <!-- Gradient definition -->
+                                <defs>
+                                    <linearGradient id="brain-grad-soft" x1="28" y1="20" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FF9EBB" />
+                                        <stop offset="1" stop-color="#FF6B93" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="mascot-star star-1">⭐</div>
+                        <div class="mascot-star star-2">✨</div>
+                    </div>
                 </div>
 
-                <!-- Mode Switcher Tabs -->
-                <div class="main-mode-switcher glass-panel">
-                    <button type="button" class="main-mode-btn active" id="mode-math-btn" data-mode="math">
-                        <span class="mm-icon">🧮</span>
-                        <span class="mm-title">Tính Nhanh Luyện Não</span>
-                    </button>
-                    <button type="button" class="main-mode-btn" id="mode-memory-btn" data-mode="word-memory">
-                        <span class="mm-icon">🧠</span>
-                        <span class="mm-title">Nhớ Từ (Cuối Tuần)</span>
-                    </button>
+                <!-- Game Mode Selection Cards (2 Large Interactive Cards) -->
+                <div class="game-modes-section">
+                    <h2 class="section-label">🎮 Chọn chế độ chơi</h2>
+                    <div class="game-cards-grid">
+                        <!-- Card 1: Tính Nhanh -->
+                        <div class="game-mode-card card-math active" id="mode-math-btn" data-mode="math">
+                            <div class="gcard-badge badge-fire">🔥 Thần Tốc</div>
+                            <div class="gcard-icon">🧮</div>
+                            <div class="gcard-body">
+                                <h3 class="gcard-title">Tính Nhanh</h3>
+                                <p class="gcard-desc">Thử thách phản xạ tính nhẩm với các phép toán siêu vui!</p>
+                            </div>
+                            <div class="gcard-footer">
+                                <span class="gcard-pill">⭐ 10 câu</span>
+                                <span class="gcard-pill">⚡ Phản xạ</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Nhớ Từ Cuối Tuần -->
+                        <div class="game-mode-card card-memory" id="mode-memory-btn" data-mode="word-memory">
+                            <div class="gcard-badge badge-star">⭐ Trí Nhớ</div>
+                            <div class="gcard-icon">📝</div>
+                            <div class="gcard-body">
+                                <h3 class="gcard-title">Nhớ Từ</h3>
+                                <p class="gcard-desc">Cùng ôn lại 20 từ vựng đã học trong tuần nhé!</p>
+                            </div>
+                            <div class="gcard-footer">
+                                <span class="gcard-pill">⏱️ 2 phút</span>
+                                <span class="gcard-pill">🌈 Cuối tuần</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Setup Configuration Form (For Math Mode) -->
-                <div class="config-card glass-panel" id="math-config-panel" style="display:none;">
-                    <h2 class="config-heading">Tùy Chọn Luyện Tập Toán</h2>
+                <div class="config-card playful-panel" id="math-config-panel" style="display:none;">
+                    <h2 class="config-heading">⚙️ Tùy Chọn Luyện Tập</h2>
 
                     <div class="form-group">
                         <label class="form-label">Phép toán:</label>
@@ -155,8 +203,8 @@
                 </div>
 
                 <!-- Memory Test Info Card (For Memory Mode) -->
-                <div class="config-card glass-panel hidden" id="memory-config-panel">
-                    <h2 class="config-heading">Kiểm Tra Trí Nhớ Cuối Tuần</h2>
+                <div class="config-card playful-panel hidden" id="memory-config-panel">
+                    <h2 class="config-heading">🧠 Kiểm Tra Trí Nhớ Cuối Tuần</h2>
                     <div class="memory-info-box">
                         <div class="mib-item">
                             <span class="mib-icon">📚</span>
@@ -175,44 +223,86 @@
                     </div>
                 </div>
 
-                <!-- Big Start Button & Stats Button -->
+                <!-- Main High-Energy CTA "BẮT ĐẦU CHƠI" Button -->
                 <div class="home-actions">
-                    <button id="start-btn" class="btn btn-primary btn-lg pulse-glow">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        <span id="start-btn-text">Bắt Đầu Luyện Toán</span>
-                    </button>
-
-                    <button id="view-stats-btn" class="btn btn-secondary btn-lg">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                            height="20">
-                            <line x1="18" y1="20" x2="18" y2="10"></line>
-                            <line x1="12" y1="20" x2="12" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="14"></line>
-                        </svg>
-                        Biểu Đồ Thống Kê
+                    <button id="start-btn" class="btn btn-cta-main btn-lg bounce-hover">
+                        <div class="cta-inner">
+                            <span class="cta-icon">🚀</span>
+                            <div class="cta-text-group">
+                                <span id="start-btn-text" class="cta-main-text">BẮT ĐẦU CHƠI</span>
+                                <span class="cta-sub-text">Chỉ mất 2 phút!</span>
+                            </div>
+                        </div>
                     </button>
                 </div>
 
-                <!-- Quick Stats Preview Banner -->
-                <div class="quick-stats-banner glass-panel">
-                    <div class="quick-stat-item">
-                        <span class="qs-label">Đã luyện tập</span>
-                        <span class="qs-value" id="qs-total-games">0 phiên</span>
+                <!-- Gamification Progress & Goals ("🌟 Tiến trình hôm nay") -->
+                <div class="gamification-section playful-panel">
+                    <div class="gamification-header">
+                        <h3 class="gami-title">🌟 Tiến trình hôm nay</h3>
+                        <span class="gami-badge">Cấp độ 1</span>
                     </div>
-                    <div class="qs-divider"></div>
-                    <div class="quick-stat-item">
-                        <span class="qs-label">Chính xác TB</span>
-                        <span class="qs-value" id="qs-avg-acc">0%</span>
+                    <div class="gami-stats-row">
+                        <div class="gami-card">
+                            <span class="gami-icon">🔥</span>
+                            <div class="gami-info">
+                                <span class="gami-value" id="gami-streak-val">5 câu</span>
+                                <span class="gami-label">Chuỗi đúng</span>
+                            </div>
+                        </div>
+                        <div class="gami-card">
+                            <span class="gami-icon">⭐</span>
+                            <div class="gami-info">
+                                <span class="gami-value" id="gami-xp-val">120 XP</span>
+                                <span class="gami-label">XP hôm nay</span>
+                            </div>
+                        </div>
+                        <div class="gami-card">
+                            <span class="gami-icon">🏆</span>
+                            <div class="gami-info">
+                                <span class="gami-value" id="gami-best-val">10/10</span>
+                                <span class="gami-label">Kỷ lục</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="qs-divider"></div>
-                    <div class="quick-stat-item">
-                        <span class="qs-label">Tốc độ TB</span>
-                        <span class="qs-value" id="qs-avg-speed">0s/câu</span>
+                    <div class="gami-progress-bar-wrapper">
+                        <div class="gami-pb-header">
+                            <span>Mục tiêu ngày</span>
+                            <span id="gami-pb-text">70% hoàn thành</span>
+                        </div>
+                        <div class="gami-pb-track">
+                            <div class="gami-pb-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Preview Banner ("📈 Hôm nay bạn đã làm được") -->
+                <div class="quick-stats-section playful-panel">
+                    <div class="qs-header-row">
+                        <h3 class="qs-heading">📈 Hôm nay bạn đã làm được</h3>
+                        <button id="view-stats-btn" class="btn-link-stats">
+                            Xem tiến trình ➔
+                        </button>
+                    </div>
+                    <div class="quick-stats-banner">
+                        <div class="quick-stat-item">
+                            <span class="qs-label">Đã luyện tập</span>
+                            <span class="qs-value" id="qs-total-games">0 phiên</span>
+                        </div>
+                        <div class="qs-divider"></div>
+                        <div class="quick-stat-item">
+                            <span class="qs-label">Chính xác TB</span>
+                            <span class="qs-value" id="qs-avg-acc">0%</span>
+                        </div>
+                        <div class="qs-divider"></div>
+                        <div class="quick-stat-item">
+                            <span class="qs-label">Tốc độ TB</span>
+                            <span class="qs-value" id="qs-avg-speed">0s/câu</span>
+                        </div>
                     </div>
                 </div>
             </section>
+
 
             <!-- 2. MATH QUIZ SCREEN -->
             <section id="quiz-screen" class="screen">
@@ -677,37 +767,26 @@
         <nav class="bottom-nav" id="bottom-nav">
             <button class="bnav-btn active" id="bnav-home-btn" data-nav="home">
                 <div class="bnav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
+                    <span>🏠</span>
                 </div>
-                <span class="bnav-label">Trang Chủ</span>
+                <span class="bnav-label">Chơi</span>
             </button>
 
             <button class="bnav-btn" id="bnav-stats-btn" data-nav="stats">
                 <div class="bnav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                    </svg>
+                    <span>🏆</span>
                 </div>
-                <span class="bnav-label">Thống Kê</span>
+                <span class="bnav-label">Thành Tích</span>
             </button>
 
             <button class="bnav-btn" id="bnav-settings-btn" data-nav="settings">
                 <div class="bnav-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path
-                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                        </path>
-                    </svg>
+                    <span>⚙️</span>
                 </div>
                 <span class="bnav-label">Cài Đặt</span>
             </button>
         </nav>
+
     </div>
 
     <script src="script.js"></script>

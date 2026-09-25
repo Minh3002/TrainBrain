@@ -1,0 +1,9 @@
+{
+  "appId": "com.mathmemory.brainapp2",
+  "appName": "Tính Nhanh Luyện Não",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
+
