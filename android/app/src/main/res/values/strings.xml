@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Trí Nhớ &amp; Tính Nhẩm</string>
+    <string name="title_activity_main">Trí Nhớ &amp; Tính Nhẩm</string>
+    <string name="package_name">com.mathmemory.brainapp</string>
+    <string name="custom_url_scheme">com.mathmemory.brainapp</string>
+</resources>

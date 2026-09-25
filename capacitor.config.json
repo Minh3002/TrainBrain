@@ -1,8 +1,7 @@
 {
   "appId": "com.mathmemory.brainapp",
-  "appName": "Trí Nhớ & Tính Nhẩm",
-  "webDir": ".",
-  "bundledWebRuntime": false,
+  "appName": "Tính Nhanh Luyện Não",
+  "webDir": "www",
   "server": {
     "androidScheme": "https"
   }
